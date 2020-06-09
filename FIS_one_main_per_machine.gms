@@ -1,38 +1,7 @@
 * maintenance at the beginning
 * alterantive constraints
-set j jobs /1*3/;
-set m maintenance /m1*m2/;
-set c machines /c1*c2/;
-alias(i,j);
-sets edg(j,j) /
-1.2
-2.3
-/;
-sets hedg(i,j) /
-1.3
-/;
-*$Include
 
-display edg, hedg;
-
-Scalar
-price "price for outsourcing" /20/
-big_J "big M constant" /20/;
-
-Parameters
-cost(m) /m1 2, m2 3/;
-*$INCLUDE "vztahy.txt";
-
-Parameters q(i,j) "penalties FROM R" /
-1.2 4
-2.3 5
-/;
-*$INCLUDE "vztahy.txt";
-Parameters delta(i,j) "improvements FROM R" /
-1.2 3
-2.3 3
-/;
-*$INCLUDE "vztahy.txt";
+$INCLUDE "input.inc"
 
 Binary variables
 x(j,c) "assignment of a job to a machine"
@@ -46,7 +15,7 @@ Variable
 objfunction;
 
 Equations
-costs,
+costs_obj,
 all_jobs(j),
 maint_per_time(m),
 maint_per_machine(c),
@@ -59,7 +28,7 @@ maint_3(i,j,m,c),
 z_sum(i,j);
 
 * costs.. objfunction =e= sum(m, cost(m))sum(m, x(m,c)) + price*sum(HRANA, q(i,j)*y(i,j)) - price*sum(HRANA,delta(i,j)*z(i,j))   ;
-costs.. objfunction =e= sum(m, cost(m)*sum(c, xx(m,c))) + price*sum((i,j)$edg(i,j), q(i,j)*y(i,j) - delta(i,j)*z(i,j));
+costs_obj.. objfunction =e= sum(m, costs(m)*sum(c, xx(m,c))) + price*sum((i,j)$edg(i,j), q(i,j)*y(i,j) - delta(i,j)*z(i,j));
 all_jobs(j).. sum(c, x(j,c)) =e= 1;
 maint_per_time(m).. sum(c, xx(m,c)) =l= 1;
 maint_per_machine(c).. sum(m, xx(m,c)) =l= 1;
