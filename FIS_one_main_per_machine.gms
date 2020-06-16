@@ -1,7 +1,8 @@
 * maintenance at the beginning
 * alterantive constraints
 
-$INCLUDE "input.inc"
+* $INCLUDE "input.inc"
+$INCLUDE "input_bigger.inc"
 
 Binary variables
 x(j,c) "assignment of a job to a machine"
@@ -46,4 +47,4 @@ Model FIS_maintenance /all/;
 
 solve FIS_maintenance minimizing objfunction using MIP;
 
-*display x.l, y.l, z.l, zz.l, xx.l;
+display x.l, y.l, z.l, zz.l, xx.l;
